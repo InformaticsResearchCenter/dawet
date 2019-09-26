@@ -11,7 +11,7 @@ to using this program :
 ```python
 import dawet  
   
-ws = dawet.Dawet()  
+ws = dawet.Dawet(filename)  
 
 worksheet_number = 0
 #getData  
