@@ -1,10 +1,10 @@
-import config
 import gspread
+import time
 from oauth2client.service_account import  ServiceAccountCredentials
 
-class Dawet(object, filename):
+class Dawet(object):
     def __init__(self, filename):
-	self.filename = filename
+        self.filename = filename
         self.opendb()
 
     def opendb(self):
@@ -14,11 +14,17 @@ class Dawet(object, filename):
         self.sheet = client.open(self.filename)
 
     def getData(self, rowname, colname, sheetnum):
-        # try:
-        ambil = self.sheet.get_worksheet(sheetnum).cell(self.sheet.get_worksheet(sheetnum).find(rowname).row, self.sheet.get_worksheet(sheetnum).find(colname).col).value
-        # except Exception as e:
-        # ambil = e
-        return ambil
+        dataError = True
+        while dataError:
+            try:
+                ambil = self.sheet.get_worksheet(sheetnum).cell(self.sheet.get_worksheet(sheetnum).find(rowname).row, self.sheet.get_worksheet(sheetnum).find(colname).col).value
+                print(colname + " selesai")
+                return ambil
+            except Exception as e:
+                if str(e).find("RESOURCE_EXHAUSTED"):
+                    print("wait ...")
+                    time.sleep(10)
+                    dataError = True
 
     def setData(self, rowname, colname, sheetnum, content):
         setv = self.sheet.get_worksheet(sheetnum).update_cell(self.sheet.get_worksheet(sheetnum).find(rowname).row, self.sheet.get_worksheet(sheetnum).find(colname).col, content)
